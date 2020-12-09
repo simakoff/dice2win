@@ -1,0 +1,38 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Dice2Win
+    network: mainnet
+    source:
+      address: "0xD1CEeeeee83F8bCF3BEDad437202b6154E9F5405"
+      abi: Dice2Win
+      startBlock: 6287152
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Bet
+        - Jackpot
+      abis:
+        - name: Dice2Win
+          file: Dice2Win\abis\Dice2Win.json
+      eventHandlers:
+        - event: FailedPayment(indexed address,uint256)
+          handler: handleFailedPayment
+        - event: Payment(indexed address,uint256)
+          handler: handlePayment
+        - event: JackpotPayment(indexed address,uint256)
+          handler: handleJackpotPayment
+        - event: Commit(uint256)
+          handler: handleCommit
+      callHandlers:
+        - function: refundBet(uint256)
+          handler: handleRefundBet
+        - function: settleBet(uint256,bytes32)
+          handler: handleSettleBet
+        - function: settleBetUncleMerkleProof(uint256,uint40)
+          handler: handleSettleBetUncleMerkleProof
+      file: Dice2Win\Dice2Win.wasm
