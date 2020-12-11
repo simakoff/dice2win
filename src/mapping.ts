@@ -89,7 +89,7 @@ export function handlePayment(event: Payment): void {
     let dayData = getDayDataEntity(event.block);
     let amount = event.params.amount;
     if(!amount.isZero()) {
-        dayData.winCount = dayData.winVolume.plus(BIGINT_ONE);
+        dayData.winCount = dayData.winCount.plus(BIGINT_ONE);
         dayData.winVolume = dayData.winVolume.plus(amount);
         dayData.save();
     }
@@ -104,7 +104,7 @@ export function handleFailedPayment(event: FailedPayment): void {
     // }
 }
 
-export function handleCommit(event: Commit): void {}
+// export function handleCommit(event: Commit): void {}
 
 // @TODO: find-out how to get bet result
 export function handleRefundBet(call: RefundBetCall): void {}
