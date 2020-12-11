@@ -29,6 +29,8 @@ dataSources:
         - event: Commit(uint256)
           handler: handleCommit
       callHandlers:
+        - function: placeBet(uint256,uint256,uint256,uint256,bytes32,bytes32)
+          handler: handlePlaceBet
         - function: refundBet(uint256)
           handler: handleRefundBet
         - function: settleBet(uint256,bytes32)

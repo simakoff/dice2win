@@ -1,22 +1,21 @@
 type Bet @entity {
-  id: ID!
-  commit: BigInt! # uint256
-  gambler: Bytes! # address
-  amount: BigInt! # uint256
-  win: Boolean
+    id: ID!
+    commit: BigInt! # uint256
+    gambler: Bytes! # address
+    amount: BigInt! # uint256
+    win: Boolean
 }
 
 type Jackpot @entity {
-  id: ID!
-  betCommit: BigInt! # uint256
-  gambler: Bytes! # address
-  amount: BigInt! # uint256
+    id: ID!
+    betCommit: BigInt! # uint256
+    gambler: Bytes! # address
+    amount: BigInt! # uint256
 }
 
 type DayData @entity {
-  id: ID!
-  date: Int!
-  dayBetVolume: BigInt!
-  dayWinVolume: BigInt!
-  dayJackpotWinVolume: BigInt!
+    id: ID!
+    betVolume: BigInt!
+    winVolume: BigInt!
+    jackpotWinVolume: BigInt!
 }

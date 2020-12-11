@@ -6,10 +6,10 @@
     "create": "graph create simakoff/dice2win --node https://api.thegraph.com/deploy/",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ simakoff/dice2win",
-    "create-local": "graph create --node http://localhost:8020/ simakoff/dice2win",
-    "deploy-local": "graph deploy --node http://127.0.0.1:8020 --ipfs http://localhost:5001 simakoff/dice2win ",
-    "remove-local": "graph remove --node http://localhost:8020/ simakoff/dice2win"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ simakoff/dice2",
+    "create-local": "graph create --node http://localhost:8020/ simakoff/dice2",
+    "deploy-local": "graph deploy --node http://127.0.0.1:8020 --ipfs http://localhost:5001 simakoff/dice2 ",
+    "remove-local": "graph remove --node http://localhost:8020/ simakoff/dice2"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.19.0",

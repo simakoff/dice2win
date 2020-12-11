@@ -167,39 +167,30 @@ export class DayData extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get date(): i32 {
-    let value = this.get("date");
-    return value.toI32();
-  }
-
-  set date(value: i32) {
-    this.set("date", Value.fromI32(value));
-  }
-
-  get dayBetVolume(): BigInt {
-    let value = this.get("dayBetVolume");
+  get betVolume(): BigInt {
+    let value = this.get("betVolume");
     return value.toBigInt();
   }
 
-  set dayBetVolume(value: BigInt) {
-    this.set("dayBetVolume", Value.fromBigInt(value));
+  set betVolume(value: BigInt) {
+    this.set("betVolume", Value.fromBigInt(value));
   }
 
-  get dayWinVolume(): BigInt {
-    let value = this.get("dayWinVolume");
+  get winVolume(): BigInt {
+    let value = this.get("winVolume");
     return value.toBigInt();
   }
 
-  set dayWinVolume(value: BigInt) {
-    this.set("dayWinVolume", Value.fromBigInt(value));
+  set winVolume(value: BigInt) {
+    this.set("winVolume", Value.fromBigInt(value));
   }
 
-  get dayJackpotWinVolume(): BigInt {
-    let value = this.get("dayJackpotWinVolume");
+  get jackpotWinVolume(): BigInt {
+    let value = this.get("jackpotWinVolume");
     return value.toBigInt();
   }
 
-  set dayJackpotWinVolume(value: BigInt) {
-    this.set("dayJackpotWinVolume", Value.fromBigInt(value));
+  set jackpotWinVolume(value: BigInt) {
+    this.set("jackpotWinVolume", Value.fromBigInt(value));
   }
 }
