@@ -1,4 +1,4 @@
-import { BigInt, ByteArray, crypto, ethereum } from "@graphprotocol/graph-ts";
+import { BigInt, ByteArray, crypto, ethereum, log } from "@graphprotocol/graph-ts";
 import {
     Dice2Win,
     FailedPayment,
@@ -12,6 +12,9 @@ import {
 } from "../generated/Dice2Win/Dice2Win";
 
 import { Bet, Jackpot, DayData } from "../generated/schema";
+
+const BIGINT_ZERO = BigInt.fromI32(0);
+//const BIGINT_ONE = BigInt.fromI32(1);
 
 // Entities can be loaded from the store using a string ID; this ID
 // needs to be unique across all entities of the same type
@@ -61,9 +64,9 @@ export function handlePlaceBet(call: PlaceBetCall): void {
     entity.amount = call.transaction.value;
     entity.save();
 
-    let dayData = getDayDataEntity(call.block);
-    dayData.betVolume = dayData.betVolume.plus(call.transaction.value);
-    dayData.save();
+    // let dayData = getDayDataEntity(call.block);
+    // dayData.betVolume = dayData.betVolume.plus(call.transaction.value);
+    // dayData.save();
 }
 
 export function handleJackpotPayment(event: JackpotPayment): void {
@@ -72,6 +75,7 @@ export function handleJackpotPayment(event: JackpotPayment): void {
     ).toHex();
 
     let entity = new Jackpot(id);
+    entity.betCommit = BIGINT_ZERO;
     entity.gambler = event.params.beneficiary;
     entity.amount = event.params.amount;
     entity.save();
@@ -83,13 +87,16 @@ export function handleJackpotPayment(event: JackpotPayment): void {
 
 export function handlePayment(event: Payment): void {
     let dayData = getDayDataEntity(event.block);
-    dayData.winVolume = dayData.winVolume.plus(event.params.amount);
-    dayData.save();
+    let amount = event.params.amount;
+    if(!amount.isZero()) {
+        dayData.winVolume = dayData.winVolume.plus(amount);
+        dayData.save();
+    }
 }
 export function handleFailedPayment(event: FailedPayment): void {
     // @TODO: find-out how to handle jackpot win in case payment failed
     // let amount = event.params.amount;
-    // if(!amount.equals(BigInt.fromI32(1))) {
+    // if(!amount.equals(BIGINT_ONE)) {
     //     let dayData = getDayDataEntity(event.block);
     //     dayData.winVolume = dayData.winVolume.plus(amount);
     //     dayData.save();
@@ -121,6 +128,9 @@ function getDayDataEntity(block: ethereum.Block):DayData {
     let entity = DayData.load(dayIDStr);
     if (entity == null) {
         entity = new DayData(dayIDStr);
+        entity.betVolume = BIGINT_ZERO;
+        entity.winVolume = BIGINT_ZERO;
+        entity.jackpotWinVolume = BIGINT_ZERO;
     }
     return <DayData>entity;
 }
