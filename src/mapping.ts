@@ -114,12 +114,13 @@ function concat(a: ByteArray, b: ByteArray): ByteArray {
 }
 
 function getDayDataEntity(block: ethereum.Block):DayData {
-    //let timestamp = block.timestamp.toI32()
-    let dayID = (block.timestamp.div(BigInt.fromI32(86400))).toString();
+    let timestamp = block.timestamp.toI32();
+    let dayID = timestamp / 86400;
+    let dayIDStr = dayID.toString();        
 
-    let entity = DayData.load(dayID);
+    let entity = DayData.load(dayIDStr);
     if (entity == null) {
-        entity = new DayData(dayID);
+        entity = new DayData(dayIDStr);
     }
     return <DayData>entity;
 }
