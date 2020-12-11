@@ -13,8 +13,8 @@ import {
 
 import { Bet, Jackpot, DayData } from "../generated/schema";
 
-const BIGINT_ZERO = BigInt.fromI32(0);
-//const BIGINT_ONE = BigInt.fromI32(1);
+let BIGINT_ZERO = BigInt.fromI32(0);
+//let BIGINT_ONE = BigInt.fromI32(1);
 
 // Entities can be loaded from the store using a string ID; this ID
 // needs to be unique across all entities of the same type
@@ -70,9 +70,10 @@ export function handlePlaceBet(call: PlaceBetCall): void {
 }
 
 export function handleJackpotPayment(event: JackpotPayment): void {
-    let id = crypto.keccak256(
-        concat(event.transaction.hash, ByteArray.fromHexString(event.transactionLogIndex.toHex()))
-    ).toHex();
+    // let id = crypto.keccak256(
+    //     concat(event.transaction.hash, ByteArray.fromHexString(event.transactionLogIndex.toHexString()))
+    // ).toHex();
+    let id = crypto.keccak256(ByteArray.fromUTF8(event.transaction.hash.toHex()+"."+event.transactionLogIndex.toHex())).toHex();
 
     let entity = new Jackpot(id);
     entity.betCommit = BIGINT_ZERO;
