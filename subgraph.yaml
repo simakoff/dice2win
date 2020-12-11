@@ -26,8 +26,8 @@ dataSources:
           handler: handlePayment
         - event: JackpotPayment(indexed address,uint256)
           handler: handleJackpotPayment
-        - event: Commit(uint256)
-          handler: handleCommit
+        # - event: Commit(uint256)
+        #   handler: handleCommit
       callHandlers:
         - function: placeBet(uint256,uint256,uint256,uint256,bytes32,bytes32)
           handler: handlePlaceBet

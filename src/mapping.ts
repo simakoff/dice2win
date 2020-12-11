@@ -14,7 +14,7 @@ import {
 import { Bet, Jackpot, DayData } from "../generated/schema";
 
 let BIGINT_ZERO = BigInt.fromI32(0);
-//let BIGINT_ONE = BigInt.fromI32(1);
+let BIGINT_ONE = BigInt.fromI32(1);
 
 // Entities can be loaded from the store using a string ID; this ID
 // needs to be unique across all entities of the same type
@@ -64,15 +64,13 @@ export function handlePlaceBet(call: PlaceBetCall): void {
     entity.amount = call.transaction.value;
     entity.save();
 
-    // let dayData = getDayDataEntity(call.block);
-    // dayData.betVolume = dayData.betVolume.plus(call.transaction.value);
-    // dayData.save();
+    let dayData = getDayDataEntity(call.block);
+    dayData.betCount = dayData.betCount.plus(BIGINT_ONE);
+    dayData.betVolume = dayData.betVolume.plus(call.transaction.value);
+    dayData.save();
 }
 
 export function handleJackpotPayment(event: JackpotPayment): void {
-    // let id = crypto.keccak256(
-    //     concat(event.transaction.hash, ByteArray.fromHexString(event.transactionLogIndex.toHexString()))
-    // ).toHex();
     let id = crypto.keccak256(ByteArray.fromUTF8(event.transaction.hash.toHex()+"."+event.transactionLogIndex.toHex())).toHex();
 
     let entity = new Jackpot(id);
@@ -82,6 +80,7 @@ export function handleJackpotPayment(event: JackpotPayment): void {
     entity.save();
 
     let dayData = getDayDataEntity(event.block);
+    dayData.jackpotCount = dayData.jackpotCount.plus(BIGINT_ONE);
     dayData.jackpotWinVolume = dayData.jackpotWinVolume.plus(event.params.amount);
     dayData.save();
 }
@@ -90,6 +89,7 @@ export function handlePayment(event: Payment): void {
     let dayData = getDayDataEntity(event.block);
     let amount = event.params.amount;
     if(!amount.isZero()) {
+        dayData.winCount = dayData.winVolume.plus(BIGINT_ONE);
         dayData.winVolume = dayData.winVolume.plus(amount);
         dayData.save();
     }
@@ -105,6 +105,8 @@ export function handleFailedPayment(event: FailedPayment): void {
 }
 
 export function handleCommit(event: Commit): void {}
+
+// @TODO: find-out how to get bet result
 export function handleRefundBet(call: RefundBetCall): void {}
 export function handleSettleBet(call: SettleBetCall): void {}
 export function handleSettleBetUncleMerkleProof(call: SettleBetUncleMerkleProofCall): void {}
@@ -129,8 +131,11 @@ function getDayDataEntity(block: ethereum.Block):DayData {
     let entity = DayData.load(dayIDStr);
     if (entity == null) {
         entity = new DayData(dayIDStr);
+        entity.betCount = BIGINT_ZERO;
         entity.betVolume = BIGINT_ZERO;
+        entity.winCount= BIGINT_ZERO;
         entity.winVolume = BIGINT_ZERO;
+        entity.jackpotCount = BIGINT_ZERO;
         entity.jackpotWinVolume = BIGINT_ZERO;
     }
     return <DayData>entity;

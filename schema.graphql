@@ -15,7 +15,10 @@ type Jackpot @entity {
 
 type DayData @entity {
     id: ID!
+    betCount: BigInt!
     betVolume: BigInt!
+    winCount: BigInt!
     winVolume: BigInt!
+    jackpotCount: BigInt!
     jackpotWinVolume: BigInt!
 }
